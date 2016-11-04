@@ -21,6 +21,8 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.RuntimeMode;
@@ -134,4 +136,61 @@ public class ArticleGenerator {
 
         response.sendRedirect(Latkes.getServePath());
     }
+
+    
+    
+    /**
+     * shellApi 添加文章
+     * 
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws IOException io exception 
+     */
+    @RequestProcessing(value = "/dev/addArticles", method = HTTPRequestMethod.POST)
+    public void addArticles(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+        throws IOException {
+        Stopwatchs.start("Gen Articles");
+
+//        final String requestURI = request.getRequestURI();
+//        final int num = Integer.valueOf(requestURI.substring((Latkes.getContextPath() + "/dev/articles/gen/").length()));
+        
+        try {
+            final JSONObject admin = userQueryService.getAdmin();
+            final String authorEmail = admin.optString(User.USER_EMAIL);
+
+            final JSONObject article = new JSONObject();
+
+            article.put(Article.ARTICLE_TITLE, request.getParameter(Article.ARTICLE_TITLE));
+            article.put(Article.ARTICLE_ABSTRACT, request.getParameter(Article.ARTICLE_ABSTRACT));
+            article.put(Article.ARTICLE_TAGS_REF, "taga,tagb,tag");
+            article.put(Article.ARTICLE_AUTHOR_EMAIL, authorEmail);
+            article.put(Article.ARTICLE_COMMENT_COUNT, 0);
+            article.put(Article.ARTICLE_VIEW_COUNT, 0);
+            article.put(Article.ARTICLE_CONTENT, request.getParameter(Article.ARTICLE_CONTENT));
+            article.put(Article.ARTICLE_PERMALINK, request.getParameter(Article.ARTICLE_PERMALINK));
+            article.put(Article.ARTICLE_HAD_BEEN_PUBLISHED, true);
+            article.put(Article.ARTICLE_IS_PUBLISHED, true);
+            article.put(Article.ARTICLE_PUT_TOP, false);
+            
+            String articleCreateDate=request.getParameter(Article.ARTICLE_CREATE_DATE);
+            article.put(Article.ARTICLE_CREATE_DATE, StringUtils.isBlank(articleCreateDate)?(new Date()):DateUtils.parseDate(articleCreateDate, new String[]{"yyyy/MM"}));
+            String articleUpdateDate=request.getParameter(Article.ARTICLE_UPDATE_DATE);
+            article.put(Article.ARTICLE_UPDATE_DATE, StringUtils.isBlank(articleUpdateDate)?(new Date()):DateUtils.parseDate(articleUpdateDate, new String[]{"yyyy/MM"}));
+            
+            article.put(Article.ARTICLE_RANDOM_DOUBLE, Math.random());
+            article.put(Article.ARTICLE_COMMENTABLE, true);
+            article.put(Article.ARTICLE_VIEW_PWD, "");
+            article.put(Article.ARTICLE_SIGN_ID, "1");
+            
+            articleMgmtService.addArticle(new JSONObject().put(Article.ARTICLE, article));
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
+        }
+
+        Stopwatchs.end();
+
+        response.sendRedirect(Latkes.getServePath());
+    }    
+    
 }
