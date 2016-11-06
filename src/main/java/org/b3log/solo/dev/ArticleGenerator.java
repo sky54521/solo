@@ -163,7 +163,7 @@ public class ArticleGenerator {
 
             article.put(Article.ARTICLE_TITLE, request.getParameter(Article.ARTICLE_TITLE));
             article.put(Article.ARTICLE_ABSTRACT, request.getParameter(Article.ARTICLE_ABSTRACT));
-            article.put(Article.ARTICLE_TAGS_REF, "taga,tagb,tag");
+            article.put(Article.ARTICLE_TAGS_REF, request.getParameter(Article.ARTICLE_TAGS_REF));
             article.put(Article.ARTICLE_AUTHOR_EMAIL, authorEmail);
             article.put(Article.ARTICLE_COMMENT_COUNT, 0);
             article.put(Article.ARTICLE_VIEW_COUNT, 0);
@@ -174,9 +174,9 @@ public class ArticleGenerator {
             article.put(Article.ARTICLE_PUT_TOP, false);
             
             String articleCreateDate=request.getParameter(Article.ARTICLE_CREATE_DATE);
-            article.put(Article.ARTICLE_CREATE_DATE, StringUtils.isBlank(articleCreateDate)?(new Date()):DateUtils.parseDate(articleCreateDate, new String[]{"yyyy/MM"}));
+            article.put(Article.ARTICLE_CREATE_DATE, StringUtils.isBlank(articleCreateDate)?(new Date()):DateUtils.parseDate(articleCreateDate, new String[]{"yyyy-MM-dd HH:mm:ss"}));
             String articleUpdateDate=request.getParameter(Article.ARTICLE_UPDATE_DATE);
-            article.put(Article.ARTICLE_UPDATE_DATE, StringUtils.isBlank(articleUpdateDate)?(new Date()):DateUtils.parseDate(articleUpdateDate, new String[]{"yyyy/MM"}));
+            article.put(Article.ARTICLE_UPDATE_DATE, StringUtils.isBlank(articleUpdateDate)?(new Date()):DateUtils.parseDate(articleUpdateDate, new String[]{"yyyy-MM-dd HH:mm:ss"}));
             
             article.put(Article.ARTICLE_RANDOM_DOUBLE, Math.random());
             article.put(Article.ARTICLE_COMMENTABLE, true);
