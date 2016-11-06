@@ -163,7 +163,8 @@ public class ArticleGenerator {
 
             article.put(Article.ARTICLE_TITLE, request.getParameter(Article.ARTICLE_TITLE));
             article.put(Article.ARTICLE_ABSTRACT, request.getParameter(Article.ARTICLE_ABSTRACT));
-            article.put(Article.ARTICLE_TAGS_REF, request.getParameter(Article.ARTICLE_TAGS_REF));
+            String articleTags=request.getParameter(Article.ARTICLE_TAGS_REF);
+            article.put(Article.ARTICLE_TAGS_REF, StringUtils.isBlank(articleTags)?"java":articleTags);
             article.put(Article.ARTICLE_AUTHOR_EMAIL, authorEmail);
             article.put(Article.ARTICLE_COMMENT_COUNT, 0);
             article.put(Article.ARTICLE_VIEW_COUNT, 0);
