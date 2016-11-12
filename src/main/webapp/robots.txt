@@ -1,4 +1,6 @@
 User-agent: *
+Allow: /articles
+Allow: /tags
 Allow: /blog-articles-feed.do
 Allow: /tag-articles-feed.do*
 Disallow: /*.do
@@ -7,3 +9,4 @@ Disallow: /logout
 Disallow: /authors/*
 Disallow: /console/*
 Disallow: /error/*
+
