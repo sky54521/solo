@@ -122,13 +122,13 @@ public class IndexProcessor {
                 if ("default".equals(specifiedSkin)) {
                     specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
                 }
-            } else {//如果没有手动指定
-            	if(isMobileDevice){//如果检测到是移动
-            		specifiedSkin = "mobile";
-            	}else{
-            		specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
-            	}
+            } else {
+                specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
             }
+            if(isMobileDevice){//如果检测到是移动
+        		specifiedSkin = "mobile";
+        	}
+            
             Templates.MAIN_CFG.setServletContextForTemplateLoading(SoloServletListener.getServletContext(),
                     "/skins/" + specifiedSkin);
             request.setAttribute(Keys.TEMAPLTE_DIR_NAME, specifiedSkin);
