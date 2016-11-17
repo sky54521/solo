@@ -15,15 +15,16 @@
  */
 package org.b3log.solo.processor;
 
-import freemarker.template.Template;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
@@ -49,8 +50,11 @@ import org.b3log.solo.processor.renderer.ConsoleRenderer;
 import org.b3log.solo.processor.util.Filler;
 import org.b3log.solo.service.PreferenceQueryService;
 import org.b3log.solo.service.StatisticMgmtService;
+import org.b3log.solo.util.HttpRequestDeviceUtils;
 import org.b3log.solo.util.Skins;
 import org.json.JSONObject;
+
+import freemarker.template.Template;
 
 /**
  * Index processor.
@@ -112,13 +116,18 @@ public class IndexProcessor {
             final JSONObject preference = preferenceQueryService.getPreference();
 
             // https://github.com/b3log/solo/issues/12060
+            boolean isMobileDevice=HttpRequestDeviceUtils.isMobileDevice((HttpServletRequest)request);
             String specifiedSkin = Skins.getSkinDirName(request);
             if (null != specifiedSkin) {
                 if ("default".equals(specifiedSkin)) {
                     specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
                 }
-            } else {
-                specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
+            } else {//如果没有手动指定
+            	if(isMobileDevice){//如果检测到是移动
+            		specifiedSkin = "mobile";
+            	}else{
+            		specifiedSkin = preference.optString(Option.ID_C_SKIN_DIR_NAME);
+            	}
             }
             Templates.MAIN_CFG.setServletContextForTemplateLoading(SoloServletListener.getServletContext(),
                     "/skins/" + specifiedSkin);
